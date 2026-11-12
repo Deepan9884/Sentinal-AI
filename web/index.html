@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#f8fafc">
+    <meta name="description" content="SENTINEL-AI | Progressive Multi-Agent Threat Modeling and Empirical Security Validation">
+    <title>Sentinel AI — Automotive Systems Security Engineering</title>
+    
+    <!-- Clean Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,400;0,500;1,400&family=Host+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           SENTINEL DESIGN SYSTEM (ENTERPRISE LIGHT PASTEL - NO EMOJIS, NO THICK FONTS)
+           ========================================================================== */
+        :root {
+            color-scheme: light;
+            --bg-base: #f8fafc;
+            --bg-surface-1: #ffffff;
+            --bg-surface-2: #f1f5f9;
+            --bg-surface-3: #e2e8f0;
+            --border-subtle: #e2e8f0;
+            --border-medium: #cbd5e1;
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+
+            /* Soft Pastel Accents (Zero Neon) */
+            --pastel-sky: #0284c7;
+            --pastel-sky-bg: #e0f2fe;
+            --pastel-sky-border: #bae6fd;
+
+            --pastel-mint: #059669;
+            --pastel-mint-bg: #d1fae5;
+            --pastel-mint-border: #a7f3d0;
+
+            --pastel-rose: #e11d48;
+            --pastel-rose-bg: #ffe4e6;
+            --pastel-rose-border: #fecdd3;
+
+            --pastel-amber: #d97706;
+            --pastel-amber-bg: #fef3c7;
+            --pastel-amber-border: #fde68a;
+
+            --pastel-lavender: #7c3aed;
+            --pastel-lavender-bg: #ede9fe;
+            --pastel-lavender-border: #ddd6fe;
+
+            --font-display: 'Host Grotesk', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'Atkinson Hyperlegible Mono', ui-monospace, SFMono-Regular, monospace;
+
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-full: 9999px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-display);
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        ::selection {
+            background: var(--pastel-sky-bg);
+            color: var(--pastel-sky);
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--pastel-sky);
+            outline-offset: 2px;
+        }
+
+        .tabular, .num {
+            font-variant-numeric: tabular-nums;
+            font-family: var(--font-mono);
+            font-weight: 400;
+        }
+
+        .layout-container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 32px 24px 80px;
+        }
+
+        /* Top Bar */
+        header.top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 32px;
+        }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--pastel-sky-bg);
+            border: 1px solid var(--pastel-sky-border);
+            border-radius: var(--radius-sm);
+            color: var(--pastel-sky);
+        }
+
+        .brand-text h1 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .brand-text p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: 0.84rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+            user-select: none;
+            border: 1px solid transparent;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--pastel-sky-bg);
+            color: var(--pastel-sky);
+            border: 1px solid var(--pastel-sky-border);
+            font-weight: 500;
+        }
+
+        .btn-primary:hover {
+            background: #bae6fd;
+        }
+
+        .btn-secondary {
+            background: var(--bg-surface-1);
+            color: var(--text-secondary);
+            border-color: var(--border-medium);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-surface-2);
+            color: var(--text-primary);
+        }
+
+        /* Stage Progress Tracker */
+        .stage-tracker {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding: 12px 18px;
+            background: var(--bg-surface-1);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+        }
+
+        .stage-steps {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stage-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            transition: color 0.2s ease;
+        }
+
+        .stage-item.active {
+            color: var(--pastel-sky);
+            font-weight: 500;
+        }
+
+        .stage-item.completed {
+            color: var(--pastel-mint);
+        }
+
+        .stage-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-medium);
+            transition: background-color 0.2s ease;
+        }
+
+        .stage-item.active .stage-dot {
+            background: var(--pastel-sky);
+        }
+
+        .stage-item.completed .stage-dot {
+            background: var(--pastel-mint);
+        }
+
+        .stage-sep {
+            color: var(--border-medium);
+            font-size: 0.75rem;
+        }
+
+        /* Cards and Sections */
+        .card {
+            background: var(--bg-surface-1);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: opacity 0.3s ease, transform 0.3s var(--ease-out);
+        }
+
+        .card.hidden {
+            display: none;
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        .card.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            animation: fadeIn 0.3s var(--ease-out);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card-header-clean {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .card-title-clean {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .card-caption {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+        }
+
+        /* -------------------------------------------------------------
+           STAGE 0: UPLOAD SCREEN
+           ------------------------------------------------------------- */
+        .upload-hero {
+            text-align: center;
+            max-width: 660px;
+            margin: 0 auto;
+            padding: 16px 0 28px;
+        }
+
+        .upload-hero h2 {
+            font-size: 1.35rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+        }
+
+        .upload-hero p {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .dropzone-box {
+            border: 1.5px dashed var(--border-medium);
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface-2);
+            padding: 36px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
+            margin-bottom: 20px;
+        }
+
+        .dropzone-box:hover {
+            border-color: var(--pastel-sky);
+            background: var(--pastel-sky-bg);
+        }
+
+        .dropzone-icon {
+            color: var(--pastel-sky);
+            margin-bottom: 12px;
+        }
+
+        .dropzone-text {
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .dropzone-sub {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+        }
+
+        .spec-preview-wrap {
+            margin-top: 16px;
+            text-align: left;
+            background: var(--bg-surface-1);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+        }
+
+        .spec-preview-label {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .spec-textarea {
+            width: 100%;
+            height: 90px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 0.76rem;
+            line-height: 1.5;
+            resize: none;
+            outline: none;
+        }
+
+        /* -------------------------------------------------------------
+           STAGE 1: ANALYZER CARD
+           ------------------------------------------------------------- */
+        .analyzer-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.78rem;
+            margin-top: 12px;
+        }
+
+        .analyzer-table th {
+            text-align: left;
+            padding: 8px 12px;
+            background: var(--bg-surface-2);
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .analyzer-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        /* -------------------------------------------------------------
+           STAGE 2: INVESTIGATOR CARD & TOPOLOGY
+           ------------------------------------------------------------- */
+        .threat-item {
+            padding: 12px 14px;
+            background: var(--bg-surface-2);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+        }
+
+        .threat-title {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--pastel-rose);
+            margin-bottom: 4px;
+        }
+
+        .threat-meta {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .threat-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .svg-container {
+            width: 100%;
+            height: 180px;
+            background: var(--bg-surface-2);
+            border-radius: var(--radius-md);
+            margin-top: 14px;
+            padding: 12px;
+        }
+
+        .ecu-node {
+            cursor: pointer;
+        }
+
+        /* -------------------------------------------------------------
+           STAGE 3: PLANNER CARD
+           ------------------------------------------------------------- */
+        .plan-item {
+            padding: 12px 14px;
+            background: var(--bg-surface-2);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+        }
+
+        .plan-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .plan-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.45;
+        }
+
+        /* -------------------------------------------------------------
+           STAGE 4: HUMAN APPROVAL CARD
+           ------------------------------------------------------------- */
+        .approval-box {
+            padding: 18px 20px;
+            background: var(--pastel-amber-bg);
+            border: 1px solid var(--pastel-amber-border);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .approval-info h3 {
+            font-size: 0.92rem;
+            font-weight: 500;
+            color: var(--pastel-amber);
+            margin-bottom: 4px;
+        }
+
+        .approval-info p {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .approval-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* -------------------------------------------------------------
+           STAGE 5: EXECUTOR & TERMINAL CARD
+           ------------------------------------------------------------- */
+        .terminal-box {
+            background: var(--bg-surface-2);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            line-height: 1.55;
+            color: #334155;
+            max-height: 220px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+
+        .t-dim { color: #94a3b8; }
+        .t-cyan { color: var(--pastel-sky); }
+        .t-green { color: var(--pastel-mint); }
+        .t-red { color: var(--pastel-rose); }
+        .t-amber { color: var(--pastel-amber); }
+
+        /* -------------------------------------------------------------
+           STAGE 6: FINAL EXECUTIVE SCOREBOARD
+           ------------------------------------------------------------- */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .metric-cell {
+            padding: 16px;
+            background: var(--bg-surface-2);
+            border-radius: var(--radius-md);
+        }
+
+        .metric-lbl {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .metric-val {
+            font-size: 1.7rem;
+            font-weight: 400;
+            color: var(--text-primary);
+        }
+
+        .metric-sub {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        footer.clean-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.76rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="layout-container">
+
+        <!-- Header -->
+        <header class="top-bar">
+            <div class="brand-wrap">
+                <div class="brand-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>Sentinel AI</h1>
+                    <p>Automotive Threat Modeling &amp; Verification Platform</p>
+                </div>
+            </div>
+
+            <div class="top-actions">
+                <button class="btn btn-secondary" id="btnResetWorkflow" style="display: none;" onclick="resetToUpload()">
+                    New Subsystem Analysis
+                </button>
+            </div>
+        </header>
+
+        <!-- Progressive Stage Tracker -->
+        <div class="stage-tracker" id="stageTracker" style="display: none;">
+            <div class="stage-steps">
+                <div class="stage-item active" id="track1"><span class="stage-dot"></span> 1. Structural Analysis</div>
+                <span class="stage-sep">/</span>
+                <div class="stage-item" id="track2"><span class="stage-dot"></span> 2. Threat Enumeration</div>
+                <span class="stage-sep">/</span>
+                <div class="stage-item" id="track3"><span class="stage-dot"></span> 3. Countermeasure Synthesis</div>
+                <span class="stage-sep">/</span>
+                <div class="stage-item" id="track4"><span class="stage-dot"></span> 4. Governance Authorization</div>
+                <span class="stage-sep">/</span>
+                <div class="stage-item" id="track5"><span class="stage-dot"></span> 5. Empirical Verification</div>
+            </div>
+            <div style="font-size: 0.76rem; color: var(--text-muted);" id="trackStatus">
+                Stage 1 of 5
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 0: UPLOAD & INPUT SCREEN
+             =================================================================== -->
+        <div class="card visible" id="screenUpload">
+            <div class="upload-hero">
+                <h2>Automotive Subsystem Threat Analysis & Verification</h2>
+                <p>Ingest hardware-software interface specifications, SysML architecture definitions, or network topology schemas to perform automated threat modeling and empirical sandbox validation.</p>
+            </div>
+
+            <!-- Drag and Drop Box -->
+            <div class="dropzone-box" onclick="startAnalysis()">
+                <div class="dropzone-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                </div>
+                <div class="dropzone-text">Drop system architecture or interface definition here</div>
+                <div class="dropzone-sub">Accepts AUTOSAR ARXML, SysML XML, JSON schemas, engineering PDFs, or interface specification text</div>
+            </div>
+
+            <!-- Pre-loaded Spec Preview -->
+            <div class="spec-preview-wrap">
+                <div class="spec-preview-label">Demonstration Specification (Connected Vehicle Telematics Subsystem Rev 3.2):</div>
+                <textarea class="spec-textarea" readonly>
+- OEM Fleet Cloud broker communicates over cellular WAN to Telematics Control Unit (TCU).
+- Interface: MQTT protocol over TCP port 1883 with no mutual certificate authentication.
+- TCU relays deceleration packets via SOME/IP over vehicle Ethernet to Central Gateway ECU.
+- Central Gateway forwards brake override commands onto CAN-FD Bus to Electronic Brake Controller (ASIL-D).
+                </textarea>
+            </div>
+
+            <div style="text-align: center; margin-top: 24px;">
+                <button class="btn btn-primary" style="padding: 10px 24px; font-size: 0.88rem;" onclick="startAnalysis()">
+                    Initialize Multi-Agent Security Analysis
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 1: AGENT 1 - ANALYZER APPEARS
+             =================================================================== -->
+        <div class="card hidden" id="cardAnalyzer">
+            <div class="card-header-clean">
+                <div class="card-title-clean">1. Analyzer Agent: Structural Decomposition & Asset Classification</div>
+                <div class="card-caption">Provenance Confidence: 0.94 &middot; Reviewer Gate 1: Verified (Schema & Grounding Confirmed)</div>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.55;">
+                The Analyzer agent parsed the architectural specification, resolving 4 addressable Electronic Control Units (ECUs), 3 communication data flows, and 2 distinct trust boundary transitions across external cellular and vehicle-internal networks.
+            </p>
+            <table class="analyzer-table">
+                <thead>
+                    <tr>
+                        <th>Component Identifier</th>
+                        <th>Functional Description</th>
+                        <th>Safety Classification</th>
+                        <th>Trust Zone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>COMP-CLOUD</td>
+                        <td>OEM Fleet Management Telematics Broker</td>
+                        <td>QM</td>
+                        <td>External Untrusted</td>
+                    </tr>
+                    <tr>
+                        <td>COMP-TCU</td>
+                        <td>Telematics Control Unit (TCU)</td>
+                        <td>ASIL-B</td>
+                        <td>Telematics Perimeter</td>
+                    </tr>
+                    <tr>
+                        <td>COMP-GW</td>
+                        <td>Central Vehicle Gateway ECU</td>
+                        <td>ASIL-C</td>
+                        <td>Vehicle Internal Gateway</td>
+                    </tr>
+                    <tr>
+                        <td>COMP-BRAKE-CTRL</td>
+                        <td>Electronic Brake Controller (EBC)</td>
+                        <td>ASIL-D</td>
+                        <td>Internal Safety CAN Bus</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="text-align: right; margin-top: 16px;" id="analyzerActions">
+                <button class="btn btn-primary" onclick="proceedToInvestigator()">
+                    Proceed to Threat Enumeration
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 2: AGENT 2 - INVESTIGATOR APPEARS
+             =================================================================== -->
+        <div class="card hidden" id="cardInvestigator">
+            <div class="card-header-clean">
+                <div class="card-title-clean">2. Investigator Agent: Attack Path Discovery & Standard Taxonomy Mapping</div>
+                <div class="card-caption">Reviewer Gate 2: Verified (MITRE EMB3D, CAPEC, and CWE Catalogs Correlated)</div>
+            </div>
+
+            <div class="threat-item">
+                <div class="threat-title">THREAT-001: Unauthenticated Telematics Ingress Remote Brake Actuation</div>
+                <div class="threat-meta">MITRE EMB3D: EMB3D-T-0042 &middot; CAPEC: CAPEC-624 &middot; CWE: CWE-306 &middot; Inherent Risk Score: 8.2 / 10.0 (Critical)</div>
+                <div class="threat-desc">
+                    The external cellular MQTT broker operates without mutual TLS client certificate verification (TCP Port 1883). An unauthenticated remote actor can inject spoofed deceleration command payloads. The Telematics Control Unit translates ingress packets into SOME/IP format and relays them across Ethernet to the Central Gateway, which forwards unauthorized deceleration commands directly onto the ASIL-D safety CAN-FD bus.
+                </div>
+            </div>
+
+            <!-- SVG Topology Map (Clean, no tags) -->
+            <div class="svg-container">
+                <svg viewBox="0 0 760 150" width="100%" height="100%">
+                    <line x1="210" y1="10" x2="210" y2="140" stroke="#cbd5e1" stroke-dasharray="3,3" />
+                    <text x="215" y="22" fill="#94a3b8" font-size="8.5" font-family="'Atkinson Hyperlegible Mono', monospace">Boundary: Cellular WAN</text>
+
+                    <line x1="410" y1="10" x2="410" y2="140" stroke="#cbd5e1" stroke-dasharray="3,3" />
+                    <text x="415" y="22" fill="#94a3b8" font-size="8.5" font-family="'Atkinson Hyperlegible Mono', monospace">Boundary: Vehicle Internal</text>
+
+                    <path d="M 120 80 L 290 80" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,4" />
+                    <path d="M 330 80 L 490 80" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,4" />
+                    <path d="M 530 80 L 670 80" stroke="#f43f5e" stroke-width="2" stroke-dasharray="4,4" />
+
+                    <g transform="translate(60, 52)">
+                        <rect width="100" height="54" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                        <text x="50" y="24" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">OEM Cloud</text>
+                        <text x="50" y="39" fill="#64748b" font-size="8" text-anchor="middle">Fleet Broker</text>
+                    </g>
+                    <g transform="translate(260, 52)">
+                        <rect width="110" height="54" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                        <text x="55" y="24" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">Telematics Unit</text>
+                        <text x="55" y="39" fill="#64748b" font-size="8" text-anchor="middle">Cellular Gateway</text>
+                    </g>
+                    <g transform="translate(460, 52)">
+                        <rect width="110" height="54" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+                        <text x="55" y="24" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">Central Gateway</text>
+                        <text x="55" y="39" fill="#64748b" font-size="8" text-anchor="middle">SOME/IP Router</text>
+                    </g>
+                    <g transform="translate(640, 52)">
+                        <rect width="105" height="54" rx="6" fill="#ffffff" stroke="#fecdd3" stroke-width="1.2"/>
+                        <text x="52" y="24" fill="#0f172a" font-size="10" font-weight="500" text-anchor="middle">Brake Controller</text>
+                        <text x="52" y="39" fill="#64748b" font-size="8" text-anchor="middle">ASIL-D Actuator</text>
+                    </g>
+                </svg>
+            </div>
+
+            <div style="text-align: right; margin-top: 16px;" id="investigatorActions">
+                <button class="btn btn-primary" onclick="proceedToPlanner()">
+                    Synthesize Countermeasures
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 3: AGENT 3 - PLANNER APPEARS
+             =================================================================== -->
+        <div class="card hidden" id="cardPlanner">
+            <div class="card-header-clean">
+                <div class="card-title-clean">3. Planner Agent: Countermeasure Formulation & Residual Risk Modeling</div>
+                <div class="card-caption">Mitigation Plan: MP-001 &middot; Projected Residual Risk: 1.4 / 10.0 (-83% Reduction)</div>
+            </div>
+
+            <div class="plan-item">
+                <div class="plan-header">
+                    <span>1. Enforce Bidirectional Mutual TLS (mTLS) Ingress Authentication</span>
+                    <span style="color: var(--pastel-sky); font-family: var(--font-mono); font-size: 0.74rem;">MITRE EMB3D-M-0012</span>
+                </div>
+                <div class="plan-desc">Migrates the cellular WAN endpoint to port 8883, mandating X.509 cryptographic certificate verification for all connecting clients and blocking unauthorized external brokers.</div>
+            </div>
+
+            <div class="plan-item">
+                <div class="plan-header">
+                    <span>2. AUTOSAR Secure Onboard Communication (SecOC) Filtering</span>
+                    <span style="color: var(--pastel-sky); font-family: var(--font-mono); font-size: 0.74rem;">AUTOSAR SWS SecOC</span>
+                </div>
+                <div class="plan-desc">Central Gateway validates cryptographic Message Authentication Codes (MACs) and freshness values on SOME/IP frames prior to forwarding onto safety-critical CAN-FD message ID 0x130.</div>
+            </div>
+
+            <div style="text-align: right; margin-top: 16px;" id="plannerActions">
+                <button class="btn btn-primary" onclick="proceedToApproval()">
+                    Submit for Engineering Governance
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 4: HUMAN APPROVAL GATE APPEARS
+             =================================================================== -->
+        <div class="card hidden" id="cardApproval">
+            <div class="approval-box">
+                <div class="approval-info">
+                    <h3>Cybersecurity Governance Authorization Gate</h3>
+                    <p>In compliance with ISO/SAE 21434 Clause 9 verification standards, executing automated exploit payloads within the virtual test environment requires formal engineering authorization.</p>
+                </div>
+                <div class="approval-actions">
+                    <button class="btn btn-secondary" onclick="withholdApproval()">Withhold Authorization</button>
+                    <button class="btn btn-primary" onclick="approveAndExecute()">Authorize Emulation Execution</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 5: AGENT 4 - EXECUTOR & SANDBOX APPEARS
+             =================================================================== -->
+        <div class="card hidden" id="cardExecutor">
+            <div class="card-header-clean">
+                <div class="card-title-clean">5. Executor Agent: Hardware-in-the-Loop Emulation & Exploit Verification</div>
+                <div class="card-caption">Reviewer Gate 4: Verified (Empirical Pre/Post Comparison Proven)</div>
+            </div>
+
+            <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55;">
+                The Executor agent reproduced the vulnerability inside an isolated Renode/QEMU ARM Cortex-R52 execution environment with SocketCAN virtual interfaces. Baseline testing confirmed unauthorized brake actuation; applying the gateway SecOC countermeasure resulted in immediate ingress rejection.
+            </p>
+
+            <div class="terminal-box">
+                <div><span class="t-dim">[00:00.012]</span> <span class="t-cyan">SYSTEM:</span> Initializing isolated Renode/QEMU ARM Cortex-R52 execution target.</div>
+                <div><span class="t-dim">[00:00.038]</span> <span class="t-cyan">SYSTEM:</span> Binding virtual SocketCAN interface (CAN-FD 8 Mbps / ISO 11898-1).</div>
+                <div><span class="t-dim">[00:00.072]</span> <span class="t-amber">PRE-PATCH TEST:</span> Injecting unauthenticated MQTT deceleration frame on port 1883... <span class="t-red">Vulnerability confirmed. Gateway relayed command; brake controller actuated.</span></div>
+                <div><span class="t-dim">[00:00.110]</span> <span class="t-cyan">PATCH ENFORCEMENT:</span> Applying Central Gateway SecOC cryptographic MAC verification filter.</div>
+                <div><span class="t-dim">[00:00.142]</span> <span class="t-green">POST-PATCH TEST:</span> Re-injecting unauthorized ingress frame... <span class="t-green">Exploit blocked. Ingress rejected at gateway boundary (Status: 401 Unauthorized).</span></div>
+                <div><span class="t-dim">[00:00.165]</span> <span class="t-green">TELEMETRY VERIFICATION:</span> Safety CAN-FD bus frame transmission count = 0. Actuator uncompromised.</div>
+            </div>
+
+            <div style="text-align: right; margin-top: 16px;" id="executorActions">
+                <button class="btn btn-primary" onclick="showFinalResolution()">
+                    Generate Assurance Verification Summary
+                </button>
+            </div>
+        </div>
+
+        <!-- ===================================================================
+             STAGE 6: FINAL EXECUTIVE SCOREBOARD & DOWNLOADS
+             =================================================================== -->
+        <div class="card hidden" id="cardResolution">
+            <div class="card-header-clean">
+                <div class="card-title-clean">6. Cybersecurity Assurance Verification & Certification Ledger</div>
+                <div class="card-caption">ISO/SAE 21434:2021 &middot; IEC 62443-4-2 &middot; UNECE WP.29 R155 CSMS</div>
+            </div>
+
+            <div class="metrics-row">
+                <div class="metric-cell">
+                    <div class="metric-lbl">Inherent Attack Path Risk</div>
+                    <div class="metric-val">8.2 / 10</div>
+                    <div class="metric-sub">Critical / ASIL-D Hazard Level</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-lbl">Verified Residual Risk</div>
+                    <div class="metric-val" style="color: var(--pastel-mint);">1.4 / 10</div>
+                    <div class="metric-sub">-83% Empirical Risk Reduction</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-lbl">Attack Path Status</div>
+                    <div class="metric-val" style="color: var(--pastel-mint);">Neutralized</div>
+                    <div class="metric-sub">Sandbox proven with zero side effects</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="btn btn-secondary" onclick="resetToUpload()">Conduct New Subsystem Analysis</button>
+                <a class="btn btn-primary" href="dist/audit_report.html" target="_blank">Export ISO/SAE 21434 Audit Report (HTML)</a>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="clean-footer">
+            <div>Sentinel AI &copy; 2026 &middot; Automotive Threat Modeling &amp; Verification Platform</div>
+            <div>ISO/SAE 21434:2021 Clause 9 &middot; IEC 62443-4-2 &middot; UN R155 CSMS &middot; ASIL-D Verified</div>
+        </footer>
+
+    </div>
+
+    <!-- Progressive Disclosure Logic -->
+    <script>
+        function showElement(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('hidden');
+                el.classList.add('visible');
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function hideElement(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('visible');
+                el.classList.add('hidden');
+            }
+        }
+
+        function setStage(num, total, name) {
+            document.getElementById('trackStatus').textContent = `Stage ${num} of ${total}: ${name}`;
+            for (let i = 1; i <= total; i++) {
+                const item = document.getElementById(`track${i}`);
+                if (item) {
+                    item.classList.remove('active', 'completed');
+                    if (i < num) item.classList.add('completed');
+                    else if (i === num) item.classList.add('active');
+                }
+            }
+        }
+
+        function startAnalysis() {
+            hideElement('screenUpload');
+            document.getElementById('stageTracker').style.display = 'flex';
+            document.getElementById('btnResetWorkflow').style.display = 'inline-flex';
+            
+            setStage(1, 5, 'Structural Decomposition');
+            showElement('cardAnalyzer');
+        }
+
+        function proceedToInvestigator() {
+            document.getElementById('analyzerActions').style.display = 'none';
+            setStage(2, 5, 'Threat Enumeration');
+            showElement('cardInvestigator');
+        }
+
+        function proceedToPlanner() {
+            document.getElementById('investigatorActions').style.display = 'none';
+            setStage(3, 5, 'Countermeasure Synthesis');
+            showElement('cardPlanner');
+        }
+
+        function proceedToApproval() {
+            document.getElementById('plannerActions').style.display = 'none';
+            setStage(4, 5, 'Governance Authorization');
+            showElement('cardApproval');
+        }
+
+        function approveAndExecute() {
+            document.getElementById('cardApproval').style.opacity = '0.6';
+            setStage(5, 5, 'Empirical Verification');
+            showElement('cardExecutor');
+        }
+
+        function withholdApproval() {
+            alert('Autonomous sandbox execution withheld by cybersecurity engineer. Assessment paused.');
+        }
+
+        function showFinalResolution() {
+            document.getElementById('executorActions').style.display = 'none';
+            showElement('cardResolution');
+        }
+
+        function resetToUpload() {
+            ['cardAnalyzer', 'cardInvestigator', 'cardPlanner', 'cardApproval', 'cardExecutor', 'cardResolution'].forEach(hideElement);
+            document.getElementById('stageTracker').style.display = 'none';
+            document.getElementById('btnResetWorkflow').style.display = 'none';
+            
+            document.getElementById('analyzerActions').style.display = 'block';
+            document.getElementById('investigatorActions').style.display = 'block';
+            document.getElementById('plannerActions').style.display = 'block';
+            document.getElementById('executorActions').style.display = 'block';
+            document.getElementById('cardApproval').style.opacity = '1';
+
+            showElement('screenUpload');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

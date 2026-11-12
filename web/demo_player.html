@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel AI — Demonstration & Neural Voiceover Walkthrough</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-canvas: #fafbfc;
+            --bg-card: #ffffff;
+            --border-subtle: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --pastel-blue-bg: #eff6ff;
+            --pastel-blue-border: #bfdbfe;
+            --pastel-blue-text: #1d4ed8;
+            --radius-md: 8px;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Host Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding: 40px 24px;
+            font-weight: 400;
+        }
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+        header {
+            margin-bottom: 28px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 20px;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .header-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .video-wrapper {
+            background: #000000;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            margin-bottom: 32px;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        .meta-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+        }
+        .meta-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .meta-value {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .timeline-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 24px;
+        }
+        .timeline-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 80px 200px 1fr;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13px;
+            align-items: start;
+        }
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+        .time-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--pastel-blue-text);
+            background: var(--pastel-blue-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .stage-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .stage-desc {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-title">Sentinel AI — Demonstration &amp; Neural Voiceover Walkthrough</div>
+            <div class="header-sub">Recorded with Playwright Chromium &middot; Conversational Technical Voiceover &middot; ISO/SAE 21434 Pipeline</div>
+        </header>
+
+        <div class="video-wrapper">
+            <video controls autoplay poster="../../frontend_screenshots/01_stage0_upload_screen.png">
+                <source src="../../sentinel_ai_demo_walkthrough.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+            </video>
+        </div>
+
+        <div class="meta-grid">
+            <div class="meta-card">
+                <div class="meta-label">Narrator Voice</div>
+                <div class="meta-value">Neural Christopher (Humanized)</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Capture Engine</div>
+                <div class="meta-value">Playwright Chromium (Edge)</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Resolution &amp; Format</div>
+                <div class="meta-value">1440x900 @ 25 FPS (H.264 MP4)</div>
+            </div>
+            <div class="meta-card">
+                <div class="meta-label">Duration &amp; Size</div>
+                <div class="meta-value">03:43 min &middot; 13.8 MB</div>
+            </div>
+        </div>
+
+        <div class="timeline-section">
+            <div class="timeline-title">Synchronized Demonstration Timeline</div>
+            <div class="timeline-item">
+                <span class="time-badge">00:00</span>
+                <span class="stage-name">Stage 0: Upload &amp; Spec Selection</span>
+                <span class="stage-desc">Subsystem dropzone, loaded ISO 21434 telematics manifest, and clean progressive orchestration kickoff.</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time-badge">00:43</span>
+                <span class="stage-name">Stage 1: Analyzer Agent</span>
+                <span class="stage-desc">Architectural component decomposition (TCU, Central Gateway, Brake ECU) and Reviewer Gate 1 model sanity verification.</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time-badge">01:16</span>
+                <span class="stage-name">Stage 2: Investigator Agent</span>
+                <span class="stage-desc">MITRE EMB3D and CAPEC threat correlation revealing the remote exploit path bridging into the brake controller.</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time-badge">01:50</span>
+                <span class="stage-name">Stage 3: Planner Agent</span>
+                <span class="stage-desc">ISO 21434 remediation formulation (mutual TLS + AUTOSAR SecOC cryptographic MACs), projecting risk reduction from 8.2 to 1.4.</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time-badge">02:21</span>
+                <span class="stage-name">Stage 4: Human Signoff Gate</span>
+                <span class="stage-desc">Human-in-the-Loop governance checkpoint requiring explicit security engineer review and countermeasure authorization.</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time-badge">02:44</span>
+                <span class="stage-name">Stage 5: Executor &amp; Terminal</span>
+                <span class="stage-desc">Digital twin sandbox verification: baseline exploit confirmation, guardrail deployment, and 401 Unauthorized rejection validation.</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time-badge">03:16</span>
+                <span class="stage-name">Stage 6: Final Resolution</span>
+                <span class="stage-desc">Executive resolution metrics scoreboard (83% risk reduction, zero side effects) and UNECE WP.29 R155 compliance ledger export.</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
